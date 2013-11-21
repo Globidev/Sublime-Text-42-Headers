@@ -64,6 +64,26 @@ class remove_headerCommand(sublime_plugin.TextCommand) :
             self.view.erase(edit, headerRegion)
             self.view.settings().erase(SETTINGS_HAS_HEADER_KEY)
 
+class add_missing_endlineCommand(sublime_plugin.TextCommand) :
+    def run(self, edit) :
+        textSize = self.view.size();
+        i = textSize - 1
+        while self.view.substr(i) == '\n' :
+            i -= 1;
+        regionToReplace = sublime.Region(i + 1, textSize)
+        self.view.replace(edit, regionToReplace, '\n')
+
+class rstrip_linesCommand(sublime_plugin.TextCommand) :
+    def run(self, edit) :
+        fullRegion = sublime.Region(0, self.view.size())
+        lines = self.view.lines(fullRegion)
+        for line in reversed(lines) :
+            lineRegion = self.view.line(line)
+            stripped = self.view.substr(lineRegion).rstrip()
+            self.view.replace(edit, lineRegion, stripped)
+
 class update_headerListener(sublime_plugin.EventListener) :
     def on_pre_save(self, view) :
         view.window().run_command('update_header')
+        view.window().run_command('rstrip_lines')
+        view.window().run_command('add_missing_endline')
