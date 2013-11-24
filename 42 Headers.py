@@ -1,10 +1,12 @@
 import sublime, sublime_plugin
 import os, time, datetime, re
-from os.path import join, split, getctime
+from os.path import join, split, getctime, dirname, realpath
 
 PLUGIN_NAME = '42 Headers'
-PACKAGE_FILE = lambda fileName : join(sublime.packages_path(), PLUGIN_NAME, fileName)
+PLUGIN_DIR = dirname(realpath(__file__))
+PACKAGE_FILE = lambda fileName : join(PLUGIN_DIR, fileName)
 SETTINGS_HAS_HEADER_KEY = 'hasHeader'
+HEADER_SUB_DIR = 'headers'
 
 DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
 LOGIN = os.environ.get('USER', 'anonymous')
@@ -13,12 +15,12 @@ BY = '%s <%s>' % (LOGIN, MAIL)
 TIMESTAMP = lambda stamp : '%s by %s' % (stamp, LOGIN)
 
 def LOAD_HEADER(fileName) :
-    with open(PACKAGE_FILE(fileName), 'r') as headerFile :
+    with open(PACKAGE_FILE(join(HEADER_SUB_DIR, fileName)), 'r') as headerFile :
         return headerFile.read()
 
 HEADERS = {
-    '^Makefile$' : LOAD_HEADER('headers/Makefile.header'),
-    '^.*\.c|h$'  : LOAD_HEADER('headers/C.header')
+    '^Makefile$' : LOAD_HEADER('Makefile.header'),
+    '^.*\.c|h$'  : LOAD_HEADER('C.header')
 }
 
 def getHeader(filePath) :
