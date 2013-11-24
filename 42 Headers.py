@@ -1,68 +1,59 @@
 import sublime, sublime_plugin
-import os, time, datetime
+import os, time, datetime, re
 from os.path import join, split, getctime
 
 PLUGIN_NAME = '42 Headers'
-
-MAKEFILE_HEADER_FILE = 'Makefile.header'
-C_HEADER_FILE = 'c.header'
-
-MAKEFILE_FILE_NAME = 'Makefile'
-
-DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
-
+PACKAGE_FILE = lambda fileName : join(sublime.packages_path(), PLUGIN_NAME, fileName)
 SETTINGS_HAS_HEADER_KEY = 'hasHeader'
 
-DEFAULT_LOGIN = 'anonymous'
+DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
+LOGIN = os.environ.get('USER', 'anonymous')
+MAIL = '%s@student.42.fr' % LOGIN
+BY = '%s <%s>' % (LOGIN, MAIL)
+TIMESTAMP = lambda stamp : '%s by %s' % (stamp, LOGIN)
 
-HEADER_SIZE = 892
+def LOAD_HEADER(fileName) :
+    with open(PACKAGE_FILE(fileName), 'r') as headerFile :
+        return headerFile.read()
 
-MAIL_PATTERN = '%s@student.42.fr'
+HEADERS = {
+    '^Makefile$' : LOAD_HEADER('headers/Makefile.header'),
+    '^.*\.c|h$'  : LOAD_HEADER('headers/C.header')
+}
 
 def getHeader(filePath) :
     _, fileName = split(filePath)
 
-    login = os.environ.get('USER', DEFAULT_LOGIN)
-    mail = MAIL_PATTERN % login
-
-    by = '%s <%s>' % (login, mail)
-    creationDateTime = datetime.datetime.fromtimestamp(getctime(filePath))
-    created = '%s by %s' % (creationDateTime.strftime(DATE_TIME_FORMAT), login)
-    updated = '%s by %s' % (time.strftime(DATE_TIME_FORMAT), login)
-
-    headerFile = None
-    if fileName == MAKEFILE_FILE_NAME :
-        headerFile = MAKEFILE_HEADER_FILE
-    else :
-        _, ext = os.path.splitext(fileName)
-        if ext == '.c' or ext == '.h' :
-            headerFile = C_HEADER_FILE
-
-    if headerFile :
-        headerPath = join(sublime.packages_path(), PLUGIN_NAME, headerFile)
-        with open(headerPath, 'r') as headerFile :
-            return headerFile.read() % (fileName, by, created, updated)
+    for pattern, header in HEADERS.items() :
+        if re.search(pattern, fileName) :
+            creationDateTime = datetime.datetime.fromtimestamp(getctime(filePath))
+            created = TIMESTAMP(creationDateTime.strftime(DATE_TIME_FORMAT))
+            updated = TIMESTAMP(time.strftime(DATE_TIME_FORMAT))
+            return header % (fileName, BY, created, updated)
 
 class create_headerCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
-        header = getHeader(self.view.file_name())
-        if header :
-            self.view.insert(edit, 0, header)
-            self.view.settings().set(SETTINGS_HAS_HEADER_KEY, True)
+        if not self.view.settings().get(SETTINGS_HAS_HEADER_KEY) :
+            header = getHeader(self.view.file_name())
+            if header :
+                self.view.insert(edit, 0, header)
+                self.view.settings().set(SETTINGS_HAS_HEADER_KEY, True)
 
 class update_headerCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
-        if self.view.settings().has(SETTINGS_HAS_HEADER_KEY) :
+        if self.view.settings().get(SETTINGS_HAS_HEADER_KEY) :
             header = getHeader(self.view.file_name())
-            headerRegion = sublime.Region(0, HEADER_SIZE)
-            self.view.replace(edit, headerRegion, header)
+            if header :
+                headerRegion = sublime.Region(0, len(header))
+                self.view.replace(edit, headerRegion, header)
 
-class remove_headerCommand(sublime_plugin.TextCommand) :
+class disable_headerCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
-        if self.view.settings().has(SETTINGS_HAS_HEADER_KEY) :
-            headerRegion = sublime.Region(0, HEADER_SIZE)
+        header = getHeader(self.view.file_name())
+        if header :
+            headerRegion = sublime.Region(0, len(header))
             self.view.erase(edit, headerRegion)
-            self.view.settings().erase(SETTINGS_HAS_HEADER_KEY)
+            self.view.settings().set(SETTINGS_HAS_HEADER_KEY, False)
 
 class add_missing_endlineCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
@@ -82,8 +73,17 @@ class rstrip_linesCommand(sublime_plugin.TextCommand) :
             stripped = self.view.substr(lineRegion).rstrip()
             self.view.replace(edit, lineRegion, stripped)
 
-class update_headerListener(sublime_plugin.EventListener) :
+class eventListener(sublime_plugin.EventListener) :
     def on_pre_save(self, view) :
         view.window().run_command('update_header')
         view.window().run_command('rstrip_lines')
         view.window().run_command('add_missing_endline')
+
+    def on_load(self, view) :
+        header = getHeader(view.file_name())
+        hasHeader = False
+        if header :
+            staticHeaderLength = header.find('\n')
+            staticRegion = sublime.Region(0, staticHeaderLength)
+            hasHeader = header[:staticHeaderLength] == view.substr(staticRegion)
+        view.settings().set(SETTINGS_HAS_HEADER_KEY, hasHeader)

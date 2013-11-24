@@ -4,8 +4,8 @@
     "command": "create_header"
   },
   {
-    "caption": "42 Headers: Remove a header",
-    "command": "remove_header"
+    "caption": "42 Headers: Disable headers",
+    "command": "disable_header"
   },
   {
     "caption": "42 Headers: update header",
