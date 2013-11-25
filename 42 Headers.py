@@ -3,8 +3,8 @@ import os, time, datetime, re
 from os.path import join, split, getctime, dirname, realpath
 
 PLUGIN_NAME = '42 Headers'
-PLUGIN_DIR = dirname(realpath(__file__))
-PACKAGE_FILE = lambda fileName : join(PLUGIN_DIR, fileName)
+IS_INIT = False
+PACKAGE_FILE = lambda fileName : join(sublime.packages_path(), PLUGIN_NAME, fileName)
 SETTINGS_HAS_HEADER_KEY = 'hasHeader'
 HEADER_SUB_DIR = 'headers'
 
@@ -19,11 +19,17 @@ def LOAD_HEADER(fileName) :
         return headerFile.read()
 
 HEADERS = {
-    '^Makefile$' : LOAD_HEADER('Makefile.header'),
-    '^.*\.c|h$'  : LOAD_HEADER('C.header')
+    '^Makefile$' : 'Makefile.header',
+    '^.*\.c|h$'  : 'C.header'
 }
 
+def init() :
+    IS_INIT = True
+    for k, v in HEADERS.items() :
+        HEADERS[k] = LOAD_HEADER(v)
+
 def getHeader(filePath) :
+    if not IS_INIT : init()
     _, fileName = split(filePath)
 
     for pattern, header in HEADERS.items() :
@@ -76,6 +82,7 @@ class rstrip_linesCommand(sublime_plugin.TextCommand) :
             self.view.replace(edit, lineRegion, stripped)
 
 class eventListener(sublime_plugin.EventListener) :
+
     def on_pre_save(self, view) :
         view.window().run_command('update_header')
         view.window().run_command('rstrip_lines')
