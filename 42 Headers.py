@@ -3,6 +3,7 @@ import os, time, datetime, re
 from os.path import join, split, getctime, dirname, realpath
 
 PLUGIN_NAME = '42 Headers'
+global IS_INIT
 IS_INIT = False
 PACKAGE_FILE = lambda fileName : join(sublime.packages_path(), PLUGIN_NAME, fileName)
 SETTINGS_HAS_HEADER_KEY = 'hasHeader'
@@ -24,11 +25,13 @@ HEADERS = {
 }
 
 def init() :
+    global IS_INIT
     IS_INIT = True
     for k, v in HEADERS.items() :
         HEADERS[k] = LOAD_HEADER(v)
 
 def getHeader(filePath) :
+    global IS_INIT
     if not IS_INIT : init()
     _, fileName = split(filePath)
 
