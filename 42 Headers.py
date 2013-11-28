@@ -30,15 +30,22 @@ def init() :
     for k, v in HEADERS.items() :
         HEADERS[k] = LOAD_HEADER(v)
 
-def getHeader(filePath) :
+def getHeader(filePath, view = None, updating = False) :
     global IS_INIT
     if not IS_INIT : init()
     _, fileName = split(filePath)
 
     for pattern, header in HEADERS.items() :
         if re.search(pattern, fileName) :
-            creationDateTime = datetime.datetime.fromtimestamp(getctime(filePath))
-            created = TIMESTAMP(creationDateTime.strftime(DATE_TIME_FORMAT))
+            if updating:
+                creationDate = view.view.find(r'\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2} by [a-z]+', 0)
+                if not creationDate:
+                    created = "Error parsing the header. :( Contact apilate!"
+                else:
+                    created = view.view.substr(creationDate)
+            else:
+                creationDateTime = datetime.datetime.fromtimestamp(getctime(filePath))
+                created = TIMESTAMP(creationDateTime.strftime(DATE_TIME_FORMAT))
             updated = TIMESTAMP(time.strftime(DATE_TIME_FORMAT))
             return header % (fileName, BY, created, updated)
 
@@ -53,7 +60,7 @@ class create_headerCommand(sublime_plugin.TextCommand) :
 class update_headerCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
         if self.view.settings().get(SETTINGS_HAS_HEADER_KEY) :
-            header = getHeader(self.view.file_name())
+            header = getHeader(self.view.file_name(), self, True)
             if header :
                 headerRegion = sublime.Region(0, len(header))
                 self.view.replace(edit, headerRegion, header)
