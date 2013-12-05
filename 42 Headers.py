@@ -80,7 +80,7 @@ class add_missing_endlineCommand(sublime_plugin.TextCommand) :
         while self.view.substr(i) == '\n' :
             i -= 1;
         regionToReplace = sublime.Region(i + 1, textSize)
-        self.view.replace(edit, regionToReplace, '\n')
+        self.view.replace(edit, regionToReplace, '\n\n')
 
 class rstrip_linesCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
