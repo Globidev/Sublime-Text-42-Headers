@@ -75,12 +75,14 @@ class disable_headerCommand(sublime_plugin.TextCommand) :
 
 class add_missing_endlineCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
-        textSize = self.view.size();
-        i = textSize - 1
-        while self.view.substr(i) == '\n' :
-            i -= 1;
-        regionToReplace = sublime.Region(i + 1, textSize)
-        self.view.replace(edit, regionToReplace, '\n\n')
+        header = getHeader(self.view.file_name())
+        if header :
+            textSize = self.view.size();
+            i = textSize - 1
+            while self.view.substr(i) == '\n' :
+                i -= 1;
+            regionToReplace = sublime.Region(i + 1, textSize)
+            self.view.replace(edit, regionToReplace, '\n\n')
 
 class rstrip_linesCommand(sublime_plugin.TextCommand) :
     def run(self, edit) :
