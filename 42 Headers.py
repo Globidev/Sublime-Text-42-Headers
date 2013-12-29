@@ -38,7 +38,7 @@ def getHeader(filePath, view = None, updating = False) :
     for pattern, header in HEADERS.items() :
         if re.search(pattern, fileName) :
             if updating:
-                creationDate = view.view.find(r'\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2} by [a-z]+', 0)
+                creationDate = view.view.find(r'\d{4}\/\d{2}\/\d{2} \d{2}:\d{2}:\d{2} by [^\s]+', 0)
                 if not creationDate:
                     created = "Error parsing the header. :( Contact apilate!"
                 else:
