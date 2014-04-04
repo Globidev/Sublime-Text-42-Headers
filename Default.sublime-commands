@@ -1,0 +1,14 @@
+[
+  {
+    "caption": "42 : Add a header",
+    "command": "create_header"
+  },
+  {
+    "caption": "42 : Disable headers",
+    "command": "disable_header"
+  },
+  {
+    "caption": "42 : Update header",
+    "command": "update_header"
+  },
+]
