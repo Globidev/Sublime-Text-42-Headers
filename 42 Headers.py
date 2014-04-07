@@ -84,7 +84,7 @@ class eventListener(sublime_plugin.EventListener) :
         header = getHeader(view.file_name())
         hasHeader = False
         if header :
-            staticHeaderLength = header.find('\n')
+            staticHeaderLength = header.find('\n', header.find('\n') + 1)
             staticRegion = sublime.Region(0, staticHeaderLength)
             hasHeader = header[:staticHeaderLength] == view.substr(staticRegion)
         view.settings().set(SETTINGS_HAS_HEADER_KEY, hasHeader)
