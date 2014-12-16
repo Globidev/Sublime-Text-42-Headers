@@ -23,7 +23,8 @@ HEADERS = {
     '^Makefile$'        : 'Makefile.header',
     '^.*\.c|h|js|css$'  : 'C.header',
     '^.*\.php$'         : 'Php.header',
-    '^.*\.html$'        : 'Html.header'
+    '^.*\.html$'        : 'Html.header',
+    '^.*\.lua$'  : 'Lua.header',
 }
 
 def init() :
