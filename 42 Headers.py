@@ -24,7 +24,8 @@ HEADERS = {
     '^.*\.c|h|js|css$'  : 'C.header',
     '^.*\.php$'         : 'Php.header',
     '^.*\.html$'        : 'Html.header',
-    '^.*\.lua$'  : 'Lua.header',
+    '^.*\.lua$'         : 'Lua.header',
+    '^.*\.s$'           : 'ASM.header',
 }
 
 def init() :
