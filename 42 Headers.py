@@ -20,11 +20,12 @@ def LOAD_HEADER(fileName) :
         return headerFile.read()
 
 HEADERS = {
-    '^Makefile$'        : 'Makefile.header',
-    '^.*\.c|h|js|css$'  : 'C.header',
-    '^.*\.php$'         : 'Php.header',
-    '^.*\.html$'        : 'Html.header',
-    '^.*\.lua$'  : 'Lua.header',
+    '^Makefile$'             : 'Makefile.header',
+    '^.*\.c|h|js|css$'       : 'C.header',
+    '^.*\.php$'              : 'Php.header',
+    '^.*\.html$'             : 'Html.header',
+    '^.*\.lua$'              : 'Lua.header',
+    '^.*\.s|s64|asm|hs|h64$' : 'ASM.header',
 }
 
 def init() :
