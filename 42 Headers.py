@@ -2,7 +2,8 @@ import sublime, sublime_plugin
 import os, time, datetime, re
 from os.path import join, split, getctime, dirname, realpath
 
-PLUGIN_NAME = '42 Headers'
+# PLUGIN_NAME = '42 Headers'
+PLUGIN_NAME = os.path.dirname(os.path.realpath(__file__))
 global IS_INIT
 IS_INIT = False
 PACKAGE_FILE = lambda fileName : join(sublime.packages_path(), PLUGIN_NAME, fileName)
@@ -20,13 +21,14 @@ def LOAD_HEADER(fileName) :
 		return headerFile.read()
 
 HEADERS = {
-	'^Makefile$'					: 'Makefile.header',
-	'^.*\.c|h|js|css|rs|go|swift$'	: 'C.header',
-	'^.*\.php$'						: 'Php.header',
-	'^.*\.html$'					: 'Html.header',
-	'^.*\.lua$'						: 'Lua.header',
-	'^.*\.ml|mli$'					: 'OCaml.header',
-	'^.*\.s|s64|asm|hs|h64$'		: 'ASM.header',
+	'^Makefile$'							: 'Makefile.header',
+	'^.*\.c|h|js|css|cs|scala|rs|go|swift$'	: 'C.header',
+	'^.*\.php$'								: 'Php.header',
+	'^.*\.html$'							: 'Html.header',
+	'^.*\.lua$'								: 'Lua.header',
+	'^.*\.ml|mli$'							: 'OCaml.header',
+	'^.*\.hs$'								: 'Scala.header',
+	'^.*\.s|s64|asm|hs|h64$'				: 'ASM.header',
 }
 
 def init() :
