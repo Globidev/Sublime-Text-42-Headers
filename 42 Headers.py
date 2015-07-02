@@ -28,7 +28,7 @@ HEADERS = {
     '^.*\.lua$'                             : 'Lua.header',
     '^.*\.ml|mli$'                          : 'OCaml.header',
     '^.*\.hs$'                              : 'Haskell.header',
-    '^.*\.s|s64|asm|hs|h64$'                : 'ASM.header',
+    '^.*\.s|s64|asm|hs|h64|inc$'            : 'ASM.header',
 }
 
 def init() :
