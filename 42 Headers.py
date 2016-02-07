@@ -21,14 +21,14 @@ def LOAD_HEADER(fileName) :
         return headerFile.read()
 
 HEADERS = {
-    '^Makefile$'                              : 'Makefile.header',
-    '^.*\.(c|h|js|css|cs|scala|rs|go|swift)$' : 'C.header',
-    '^.*\.php$'                               : 'Php.header',
-    '^.*\.html$'                              : 'Html.header',
-    '^.*\.lua$'                               : 'Lua.header',
-    '^.*\.(ml|mli)$'                          : 'OCaml.header',
-    '^.*\.hs$'                                : 'Haskell.header',
-    '^.*\.(s|s64|asm|hs|h64|inc)$'            : 'ASM.header',
+    '^Makefile$'                                            : 'Makefile.header',
+    '^.*\.(c|h|cpp|hpp|tpp|js|css|cs|scala|rs|go|swift)$'   : 'C.header',
+    '^.*\.php$'                                             : 'Php.header',
+    '^.*\.html$'                                            : 'Html.header',
+    '^.*\.lua$'                                             : 'Lua.header',
+    '^.*\.(ml|mli)$'                                        : 'OCaml.header',
+    '^.*\.hs$'                                              : 'Haskell.header',
+    '^.*\.(s|s64|asm|hs|h64|inc)$'                          : 'ASM.header',
 }
 
 def init() :
