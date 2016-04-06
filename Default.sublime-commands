@@ -11,4 +11,11 @@
     "caption": "42 : Update header",
     "command": "update_header"
   },
+  {
+    "caption": "42 headers: settings",
+    "command": "open_file",
+    "args": {
+        "file": "${packages}/User/42-headers.sublime-settings"
+    }
+  }
 ]
