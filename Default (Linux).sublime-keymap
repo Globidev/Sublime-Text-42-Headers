@@ -3,6 +3,6 @@
     "keys": [
       "ctrl+alt+h"
     ],
-    "command": "create_header"
+    "command": "toggle_header"
   }
 ]
