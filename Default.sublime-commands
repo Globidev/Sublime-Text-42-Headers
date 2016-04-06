@@ -1,14 +1,17 @@
 [
   {
-    "caption": "42 : Add a header",
-    "command": "create_header"
+    "caption": "42 headers: toggle",
+    "command": "toggle_header"
   },
   {
-    "caption": "42 : Disable headers",
-    "command": "disable_header"
-  },
-  {
-    "caption": "42 : Update header",
+    "caption": "42 headers: update",
     "command": "update_header"
   },
+  {
+    "caption": "42 headers: settings",
+    "command": "open_file",
+    "args": {
+        "file": "${packages}/User/42-headers.sublime-settings"
+    }
+  }
 ]
