@@ -6,6 +6,7 @@ from .lua import HEADER as LUA_HEADER
 from .ocaml import HEADER as OCAML_HEADER
 from .haskell import HEADER as HASKELL_HEADER
 from .asm import HEADER as ASM_HEADER
+from .python import HEADER as PYTHON_HEADER
 
 from os.path import split
 
@@ -24,6 +25,7 @@ HEADER_SPEC = (
     (('ml', 'mli'),                             OCAML_HEADER),
     (('hs', ),                                  HASKELL_HEADER),
     (('s', 's64', 'asm', 'hs', 'h64', 'inc'),   ASM_HEADER),
+    (('py'),                                    PYTHON_HEADER),
 )
 
 # Flattening the spec extensions and indexing them
