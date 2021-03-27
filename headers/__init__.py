@@ -39,7 +39,7 @@ class NoHeaderError(Exception):
 
 def get_template(file_path):
     _, file_name = split(file_path)
-    dot_index = file_name.find('.')
+    dot_index = file_name.rfind('.')
     extension = file_name[dot_index + 1:]
 
     try:
