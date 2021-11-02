@@ -10,6 +10,8 @@ class Settings:
 
     DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
 
+    SOFT = False
+
     def __init__(self):
         self.all = load_settings(Settings.SETTINGS_FILE)
 

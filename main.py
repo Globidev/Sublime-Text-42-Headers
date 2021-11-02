@@ -85,4 +85,6 @@ class update_headerCommand(TextCommand):
 class eventListener(EventListener):
 
     def on_pre_save(self, view):
-        view.window().run_command('update_header')
+        str, dict, index = view.command_history(1, True)
+        if index == 0 or not settings.SOFT:
+            view.window().run_command('update_header')
