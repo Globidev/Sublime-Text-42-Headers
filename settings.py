@@ -10,6 +10,9 @@ class Settings:
 
     DATE_TIME_FORMAT = '%Y/%m/%d %H:%M:%S'
 
+    # If SOFT is True, the update is only done if the redo stack is empty
+    SOFT = False
+
     def __init__(self):
         self.all = load_settings(Settings.SETTINGS_FILE)
 
